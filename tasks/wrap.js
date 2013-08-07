@@ -35,7 +35,13 @@ module.exports = function (grunt) {
 
       filePair.src.forEach(function (src) {
         if (detectDestType(filePair.dest) === 'directory') {
-          dest = (isExpandedPair) ? filePair.dest : unixifyPath(path.join(filePair.dest || '', src));
+          if (isExpandedPair) {
+            dest = filePair.dest;
+          } else if (options.rename) {
+            dest = options.rename(filePair.dest || '', src);
+          } else {
+            dest = unixifyPath(path.join(filePair.dest || '', src));
+          }
         } else {
           dest = filePair.dest;
         }
@@ -43,7 +49,9 @@ module.exports = function (grunt) {
         if (grunt.file.isDir(src)) {
           grunt.file.mkdir(dest);
         } else {
-          grunt.log.write('Wrapping ' + src.cyan + ' -> ' + dest.cyan + '...');
+          if (options.debug) {
+            grunt.log.write('Wrapping ' + src.cyan + ' -> ' + dest.cyan + '...');
+          }
           grunt.file.write(dest, wrap(src, options));
           grunt.log.ok();
           counter++;
