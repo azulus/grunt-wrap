@@ -53,7 +53,6 @@ module.exports = function (grunt) {
             grunt.log.write('Wrapping ' + src.cyan + ' -> ' + dest.cyan + '...');
           }
           grunt.file.write(dest, wrap(src, options));
-          grunt.log.ok();
           counter++;
         }
       });
